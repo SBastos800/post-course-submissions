@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Wasp Game</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vh;
+        }
+
+        .waspWrapper {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            align-items: center;
+            height: 300px;
+            width: 1000px;
+        }
+
+        .wasp {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid black;
+            height: 100px;
+            width: 100px;
+            margin: 10px;
+        }
+
+        button {
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="wrapper">
+        <section class="waspWrapper">
+        </section>
+        <section class="buttons">
+            <button class="attack">Attack</button>
+            <button class="playAgain">Play Again</button>
+        </section>
+    </section>
+
+    <script>
+        class Wasps {
+            constructor(name, healthPoints) {
+                this.name = name;
+                this.healthPoints = healthPoints;
+            }
+        }
+
+        class Queen extends Wasps {
+            constructor() {
+                super("Queen", 80);
+            }
+            attack() {
+                this.healthPoints -= 7;
+            }
+        }
+
+        class Drone extends Wasps {
+            constructor() {
+                super("Drone", 60);
+            }
+            attack() {
+                this.healthPoints -= 12;
+            }
+        }
+
+        class Worker extends Wasps {
+            constructor() {
+                super("Worker", 68);
+            }
+            attack() {
+                this.healthPoints -= 10;
+            }
+        }
+
+        const reset = () => {
+            wasps = [];
+
+            wasps.push(new Queen())
+
+            for (let i = 0; i < 8; i++) {
+                wasps.push(new Drone())
+            }
+
+            for (let i = 0; i < 5; i++) {
+                wasps.push(new Worker())
+            }
+        }
+
+        let wasps = [];
+
+        reset();
+
+        const displayWaspsInThePage = () => {
+            const alivewasps = wasps.filter(wasp => (wasp.healthPoints > 0))
+            const content = alivewasps.map(wasp => `<div class="wasp">${wasp.name}<span class="health">${wasp.healthPoints}</span></div>`)
+            document.querySelector(".waspWrapper").innerHTML = content.join("");
+        }
+        displayWaspsInThePage();
+
+        document.querySelector(".attack").addEventListener("click", function () {
+            const randomNumber = Math.floor(Math.random() * wasps.length);
+            const randomWasp = wasps[randomNumber];
+            randomWasp.attack();
+            displayWaspsInThePage();
+        });
+
+        document.querySelector(".playAgain").addEventListener("click", function () {
+            reset();
+            displayWaspsInThePage();
+        });
+        
+    </script>
+</body>
+
+</html>
